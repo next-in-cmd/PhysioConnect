@@ -7,7 +7,7 @@ import ProfileSuccessPage from'./pages/ProfileSuccessPage';
 import { ProfileProvider } from './context/ProfileContext';
 import FindDoctorsPage from './pages/FindDoctorsPage';
 import DoctorDetailPage from './pages/DoctorDetailPage';
-
+import AppointmentPage from './pages/AppointmentPage';
 
 
 function App() {
@@ -21,6 +21,7 @@ function App() {
         <Route path="/profilesuccess" element={<ProfileSuccessPage />} />
         <Route path="/find-doctors" element={<FindDoctorsPage />} />
         <Route path="/doctor/:id" element={<DoctorDetailPage />} />
+        <Route path="/book-appointment/:id" element={<AppointmentPage />} />
      
         
       </Routes>
