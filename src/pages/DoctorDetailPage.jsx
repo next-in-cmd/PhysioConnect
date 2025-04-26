@@ -128,21 +128,21 @@ function DoctorDetailPage() {
                 </div>
               </div>
               
-              {/* Call to action */}
+              {/* Call to action - Updated to link to appointment page */}
               <div className="mt-12 text-center">
-                <a 
-                  href={`mailto:${profile.email}?subject=Appointment Request`}
+                <Link 
+                  to={`/book-appointment/${id}`}
                   className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition duration-300 mx-2"
                 >
-                  Contact for Appointment
-                </a>
+                  Book Appointment
+                </Link>
                 
-                <Link 
-                  to="/find-doctors" 
+                <a 
+                  href={`mailto:${profile.email}?subject=Appointment Request`}
                   className="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-8 py-3 rounded-lg font-medium transition duration-300 mx-2 mt-4 md:mt-0"
                 >
-                  View All Doctors
-                </Link>
+                  Contact via Email
+                </a>
               </div>
             </div>
           </div>
