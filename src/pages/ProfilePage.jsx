@@ -1,9 +1,12 @@
-// pages/add-profile.js
 import { useState } from 'react';
-import Navbar from '../components/Navbar'; // Adjust path as needed
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import { useProfiles } from '../context/ProfileContext';
 
 function AddProfilePage() {
-  const router = useRouter();
+  const navigate = useNavigate();
+  const { addProfile } = useProfiles();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -41,9 +44,13 @@ function AddProfilePage() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // Create a URL for the file for preview (this is temporary)
+      const photoUrl = URL.createObjectURL(file);
+      
       setFormData(prev => ({
         ...prev,
-        photo: file
+        photo: file,
+        photoUrl: photoUrl // Save the URL for display
       }));
     }
   };
@@ -86,15 +93,22 @@ function AddProfilePage() {
     setIsSubmitting(true);
     
     try {
-      // Here you would normally send the data to your backend API
-      // For now, we'll simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Process the file for storage
+      // In a real app, you'd upload this to a server
+      // For now, we'll just keep the object URL
       
+      // Add the profile using our context
+      const profileId = addProfile(formData);
+      
+      // Show success message
       setSubmitSuccess(true);
-      // Redirect to success page or dashboard after a brief delay
+      
+      // Redirect to success page after a brief delay
       setTimeout(() => {
-        router.push('/profile-success');
-      }, 2000);
+        navigate('/profilesuccess', { 
+          state: { profileId } // Pass the ID to the success page
+        });
+      }, 1500);
       
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -102,6 +116,11 @@ function AddProfilePage() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Handle cancel button
+  const handleCancel = () => {
+    navigate(-1); // Go back to previous page
   };
 
   return (
@@ -247,6 +266,15 @@ function AddProfilePage() {
                         onChange={handleFileChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
+                      {formData.photoUrl && (
+                        <div className="mt-2">
+                          <img 
+                            src={formData.photoUrl} 
+                            alt="Profile preview" 
+                            className="h-20 w-20 object-cover rounded-full"
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -268,7 +296,7 @@ function AddProfilePage() {
                 <div className="flex items-center justify-between pt-4">
                   <button 
                     type="button" 
-                    onClick={() => router.back()}
+                    onClick={handleCancel}
                     className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg font-medium transition duration-300"
                   >
                     Cancel

@@ -2,19 +2,19 @@ import { useState } from 'react';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
+  
   const navItems = [
     { name: 'Home', href: '/' },
-    { name: 'Find Doctors', href: '/find doctors' },
-    { name: 'Book Appointment', href: '/book appointment' },
-    { name: 'Add Profile', href: '/add profile' },
+    { name: 'Find Doctors', href: '/find-doctors' },
+    { name: 'Book Appointment', href: '/book-appointment' },
+    { name: 'Add Profile', href: '/profilepage' },
     { name: 'Contact', href: '/contact' }
   ];
-
+  
   return (
     <header className="bg-blue-600 text-white p-4 shadow-md fixed w-full top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar'; // Adjust path as needed
 
 function PhysioConnectHomepage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   // Define a state for navbar height
   const [navbarHeight, setNavbarHeight] = useState(0);
   
@@ -34,12 +34,12 @@ function PhysioConnectHomepage() {
   // Navigation handlers
   const handleAddProfileClick = (e) => {
     e.preventDefault();
-    router.push('/add-profile');
+    navigate('/profilepage');
   };
 
   const handleFindDoctorsClick = (e) => {
     e.preventDefault();
-    router.push('/find-doctors');
+    navigate('/find-doctors');
   };
 
   return (
