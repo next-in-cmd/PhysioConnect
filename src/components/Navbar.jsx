@@ -17,16 +17,13 @@ const Navbar = () => {
     { name: 'Contact', href: '/contact' }
   ];
 
-  // Handle scroll behavior
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down and past 100px
         setIsVisible(false);
       } else if (currentScrollY < lastScrollY) {
-        // Scrolling up
         setIsVisible(true);
       }
       
@@ -41,14 +38,13 @@ const Navbar = () => {
     <header 
       className={`bg-blue-600 text-white shadow-md fixed w-full top-0 z-50 transition-transform duration-300 ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
-      }`}
+      } h-16`} // Fixed height for padding reference
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="text-2xl font-bold">
           Physio<span className="text-blue-200">Connect</span>
         </div>
 
-        {/* Mobile menu button */}
         <button 
           className="md:hidden p-2 focus:outline-none"
           onClick={toggleMenu}
@@ -60,7 +56,6 @@ const Navbar = () => {
           </svg>
         </button>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:block">
           <ul className="flex space-x-6">
             {navItems.map((item) => (
@@ -77,7 +72,6 @@ const Navbar = () => {
         </nav>
       </div>
 
-      {/* Mobile Navigation */}
       <div 
         className={`md:hidden transition-all duration-300 ease-in-out ${
           isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
