@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { useProfiles } from '../context/ProfileContext';
+import { useAuth } from '../context/AuthContext';
 
 function AppointmentPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { getProfileById } = useProfiles();
+  const { user } = useAuth();
   const profile = getProfileById(id);
   
   const [selectedDate, setSelectedDate] = useState('');
@@ -17,14 +20,12 @@ function AppointmentPage() {
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [appointmentSuccess, setAppointmentSuccess] = useState(false);
+  const [error, setError] = useState('');
   
-  // Get today's date in YYYY-MM-DD format for the date input min attribute
   const today = new Date().toISOString().split('T')[0];
-  
-  // For demo purposes, generate time slots for the selected date
+
   useEffect(() => {
     if (selectedDate) {
-      // In a real app, you would fetch available slots from a backend
       const slots = generateTimeSlots(selectedDate);
       setAvailableTimeSlots(slots);
     } else {
@@ -32,50 +33,55 @@ function AppointmentPage() {
     }
   }, [selectedDate]);
   
-  // Helper function to generate time slots (9 AM to 5 PM)
   const generateTimeSlots = (date) => {
-    // Convert selected date string to Date object
     const selectedDateObj = new Date(date);
     const dayOfWeek = selectedDateObj.getDay();
     
-    // If weekend (0 = Sunday, 6 = Saturday), return empty array
     if (dayOfWeek === 0 || dayOfWeek === 6) {
       return [];
     }
     
-    // For weekdays, generate slots from 9 AM to 5 PM, 30 minute intervals
     const slots = [];
     for (let hour = 9; hour < 17; hour++) {
       slots.push(`${hour}:00 ${hour >= 12 ? 'PM' : 'AM'}`);
       slots.push(`${hour}:30 ${hour >= 12 ? 'PM' : 'AM'}`);
     }
     
-    // Randomly mark some slots as unavailable (for demo purposes)
     return slots.map(slot => ({
       time: slot,
-      available: Math.random() > 0.3 // 70% of slots will be available
+      available: Math.random() > 0.3
     }));
   };
   
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
     
-    // Simulate API call with a timeout
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post('http://localhost:5000/appointment', {
+        doctorId: id,
+        date: selectedDate,
+        time: selectedTimeSlot,
+        reason,
+        contactMethod: preferredContact,
+        contactDetails
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setAppointmentSuccess(true);
-      
-      // Reset form
       setSelectedDate('');
       setSelectedTimeSlot('');
       setReason('');
       setContactDetails('');
-    }, 1500);
+    } catch (err) {
+      setError('Failed to book appointment');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
-  // If profile not found, show error
   if (!profile) {
     return (
       <div className="flex flex-col min-h-screen">
@@ -103,7 +109,6 @@ function AppointmentPage() {
       
       <main className="flex-1 pt-20">
         <div className="container mx-auto px-4 py-12">
-          {/* Back button */}
           <button 
             onClick={() => navigate(`/doctor/${id}`)}
             className="flex items-center text-blue-600 hover:text-blue-800 mb-6 transition duration-300"
@@ -115,7 +120,6 @@ function AppointmentPage() {
           </button>
           
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            {/* Header */}
             <div className="bg-blue-600 text-white p-6">
               <div className="flex items-center">
                 <div className="w-16 h-16 rounded-full overflow-hidden bg-white border-2 border-white mr-4 flex-shrink-0">
@@ -141,7 +145,6 @@ function AppointmentPage() {
               </div>
             </div>
             
-            {/* Success message */}
             {appointmentSuccess ? (
               <div className="p-8 text-center">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
@@ -152,7 +155,7 @@ function AppointmentPage() {
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">Appointment Request Sent!</h2>
                 <p className="text-gray-600 mb-6">
                   We've sent your appointment request to Dr. {profile.name.split(' ')[1]}. 
-                  You'll receive a confirmation email shortly.
+                  You'll receive a confirmation soon.
                 </p>
                 <div className="flex justify-center space-x-4">
                   <Link 
@@ -171,9 +174,9 @@ function AppointmentPage() {
               </div>
             ) : (
               <div className="p-6 md:p-8">
+                {error && <p className="text-red-500 mb-4">{error}</p>}
                 <form onSubmit={handleSubmit}>
                   <div className="grid md:grid-cols-2 gap-6 mb-8">
-                    {/* Date Selection */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-2" htmlFor="date">
                         Select a Date
@@ -194,7 +197,6 @@ function AppointmentPage() {
                       )}
                     </div>
                     
-                    {/* Time Slot Selection */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-2" htmlFor="time-slot">
                         Select a Time Slot
@@ -228,7 +230,6 @@ function AppointmentPage() {
                     </div>
                   </div>
                   
-                  {/* Reason for appointment */}
                   <div className="mb-6">
                     <label className="block text-gray-700 font-medium mb-2" htmlFor="reason">
                       Reason for Appointment
@@ -244,7 +245,6 @@ function AppointmentPage() {
                     ></textarea>
                   </div>
                   
-                  {/* Contact preference */}
                   <div className="mb-6">
                     <label className="block text-gray-700 font-medium mb-2">
                       Preferred Contact Method
@@ -275,7 +275,6 @@ function AppointmentPage() {
                     </div>
                   </div>
                   
-                  {/* Contact details */}
                   <div className="mb-8">
                     <label className="block text-gray-700 font-medium mb-2" htmlFor="contact-details">
                       {preferredContact === 'email' ? 'Your Email Address' : 'Your Phone Number'}
@@ -291,7 +290,6 @@ function AppointmentPage() {
                     />
                   </div>
                   
-                  {/* Submit Button */}
                   <div className="text-center">
                     <button
                       type="submit"
@@ -316,17 +314,14 @@ function AppointmentPage() {
         </div>
       </main>
       
-      <footer className="bg-gray-900 text-white py-12">
-        {/* Footer content */}
-      </footer>
+      <footer className="bg-gray-900 text-white py-12"></footer>
     </div>
   );
 }
 
-// Helper function to get day of week from date string
 function dayOfWeek(dateString) {
   const date = new Date(dateString);
-  return date.getDay(); // 0 = Sunday, 6 = Saturday
+  return date.getDay();
 }
 
 export default AppointmentPage;

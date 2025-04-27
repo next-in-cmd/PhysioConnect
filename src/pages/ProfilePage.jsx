@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useProfiles } from '../context/ProfileContext';
+import { useAuth } from '../context/AuthContext';
 
 function AddProfilePage() {
   const navigate = useNavigate();
   const { addProfile } = useProfiles();
+  const { user } = useAuth();
   
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    name: user?.name || '',
+    email: user?.email || '',
     phone: '',
     location: '',
     specialty: '',
@@ -17,13 +19,13 @@ function AddProfilePage() {
     experience: '',
     about: '',
     photo: null,
+    photoUrl: ''
   });
   
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -31,7 +33,6 @@ function AddProfilePage() {
       [name]: value
     }));
     
-    // Clear error when field is modified
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -40,22 +41,18 @@ function AddProfilePage() {
     }
   };
 
-  // Handle file upload
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Create a URL for the file for preview (this is temporary)
       const photoUrl = URL.createObjectURL(file);
-      
       setFormData(prev => ({
         ...prev,
         photo: file,
-        photoUrl: photoUrl // Save the URL for display
+        photoUrl
       }));
     }
   };
 
-  // Form validation
   const validateForm = () => {
     const newErrors = {};
     
@@ -80,7 +77,6 @@ function AddProfilePage() {
     return newErrors;
   };
 
-  // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -93,35 +89,34 @@ function AddProfilePage() {
     setIsSubmitting(true);
     
     try {
-      // Process the file for storage
-      // In a real app, you'd upload this to a server
-      // For now, we'll just keep the object URL
+      const profileId = await addProfile({
+        specialty: formData.specialty,
+        qualifications: formData.qualifications,
+        experience: formData.experience,
+        location: formData.location,
+        phone: formData.phone,
+        about: formData.about,
+        photoUrl: formData.photoUrl
+      });
       
-      // Add the profile using our context
-      const profileId = addProfile(formData);
-      
-      // Show success message
       setSubmitSuccess(true);
-      
-      // Redirect to success page after a brief delay
       setTimeout(() => {
-        navigate('/profilesuccess', { 
-          state: { profileId } // Pass the ID to the success page
-        });
+        navigate('/profilesuccess', { state: { profileId } });
       }, 1500);
-      
     } catch (error) {
-      console.error('Error submitting form:', error);
       setErrors({ submit: 'Failed to submit profile. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Handle cancel button
   const handleCancel = () => {
-    navigate(-1); // Go back to previous page
+    navigate(-1);
   };
+
+  if (!user || user.role !== 'doctor') {
+    return <Navigate to="/" />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -145,7 +140,6 @@ function AddProfilePage() {
                 )}
                 
                 <div className="grid md:grid-cols-2 gap-6">
-                  {/* Personal Information */}
                   <div className="space-y-4">
                     <div>
                       <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Full Name*</label>
@@ -157,6 +151,7 @@ function AddProfilePage() {
                         onChange={handleChange}
                         className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.name ? 'border-red-500 focus:ring-red-500' : 'focus:ring-blue-500 border-gray-300'}`}
                         placeholder="Dr. John Smith"
+                        disabled
                       />
                       {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                     </div>
@@ -171,6 +166,7 @@ function AddProfilePage() {
                         onChange={handleChange}
                         className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.email ? 'border-red-500 focus:ring-red-500' : 'focus:ring-blue-500 border-gray-300'}`}
                         placeholder="doctor@example.com"
+                        disabled
                       />
                       {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                     </div>
@@ -204,7 +200,6 @@ function AddProfilePage() {
                     </div>
                   </div>
                   
-                  {/* Professional Information */}
                   <div className="space-y-4">
                     <div>
                       <label htmlFor="specialty" className="block text-gray-700 font-medium mb-2">Specialty*</label>
@@ -279,7 +274,6 @@ function AddProfilePage() {
                   </div>
                 </div>
                 
-                {/* About Section */}
                 <div>
                   <label htmlFor="about" className="block text-gray-700 font-medium mb-2">About You</label>
                   <textarea
@@ -316,9 +310,7 @@ function AddProfilePage() {
         </div>
       </main>
       
-      <footer className="bg-gray-900 text-white py-12">
-        {/* Footer content */}
-      </footer>
+      <footer className="bg-gray-900 text-white py-12"></footer>
     </div>
   );
 }
