@@ -9,7 +9,7 @@ import AddProfilePage from './pages/ProfilePage';
 import ProfileSuccessPage from './pages/ProfileSuccessPage';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
-import DoctorDashboard from './components/DoctorDashboard';
+import DoctorDashboard from './components/DoctorDashBoard';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
