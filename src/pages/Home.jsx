@@ -27,7 +27,7 @@ function PhysioConnectHomepage() {
 
   const handleAddProfileClick = (e) => {
     e.preventDefault();
-    navigate('/profilepage');
+    navigate('/add-profile');
   };
 
   const handleFindDoctorsClick = (e) => {
