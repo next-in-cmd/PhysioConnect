@@ -107,9 +107,6 @@ PhysioConnect/
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## License
-
-This project is licensed under the MIT License - see the `LICENSE` file for details.
 
 ## Contact
 
@@ -117,4 +114,4 @@ Project Link: [https://github.com/next-in-cmd/PhysioConnect](https://github.com/
 
 ---
 
-Made with ❤️ by [next-in-cmd](https://github.com/next-in-cmd)
+Made by [next-in-cmd](https://github.com/next-in-cmd)
