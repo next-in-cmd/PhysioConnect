@@ -1,0 +1,5 @@
+Flask==2.0.1
+Flask-Cors==3.0.10
+PyJWT==2.4.0
+Werkzeug==2.0.1
+pymongo==4.6.1
