@@ -2,7 +2,7 @@
 
 PhysioConnect is a modern web platform that connects patients with qualified physiotherapists, making it easy to find and book appointments with healthcare professionals specializing in physical therapy.
 
-![PhysioConnect Platform](https://via.placeholder.com/1200x600)
+![PhysioConnect Platform](https://charming-brigadeiros-eb273d.netlify.app/)
 
 ## Features
 
