@@ -70,14 +70,61 @@ PhysioConnect/
 │   ├── pages/
 │   │   ├── Home.jsx
 │   │   ├── FindDoctorsPage.jsx
-│   │   └── ...
+│   │   ├── AboutPage.jsx
+│   │   ├── ContactPage.jsx
+│   │   ├── DoctorProfilePage.jsx
+│   │   ├── PatientProfilePage.jsx
+│   │   ├── AppointmentBookingPage.jsx
+│   │   ├── AppointmentListPage.jsx
+│   │   ├── LoginPage.jsx
+│   │   ├── RegisterPage.jsx
+│   │   └── NotFoundPage.jsx
 │   ├── components/
 │   │   ├── Navbar.jsx
-│   │   └── ...
+│   │   ├── Footer.jsx
+│   │   ├── DoctorCard.jsx
+│   │   ├── PatientCard.jsx
+│   │   ├── AppointmentCard.jsx
+│   │   ├── ProfileForm.jsx
+│   │   ├── AppointmentForm.jsx
+│   │   ├── AuthForm.jsx
+│   │   ├── Loader.jsx
+│   │   └── ProtectedRoute.jsx
+│   ├── assets/
+│   │   ├── logo.png
+│   │   ├── default-avatar.png
+│   │   └── styles/
+│   │       ├── main.css
+│   │       └── theme.css
+│   ├── api/
+│   │   ├── auth.js
+│   │   ├── doctors.js
+│   │   ├── patients.js
+│   │   ├── appointments.js
+│   │   └── index.js
+│   ├── hooks/
+│   │   ├── useAuth.js
+│   │   ├── useDoctors.js
+│   │   └── useAppointments.js
+│   ├── contexts/
+│   │   ├── AuthContext.jsx
+│   │   └── AppointmentContext.jsx
+│   ├── utils/
+│   │   ├── validators.js
+│   │   └── helpers.js
+│   ├── App.jsx
 │   └── main.jsx
 ├── public/
-├── index.html
-└── package.json
+│   ├── index.html
+│   ├── favicon.ico
+│   └── manifest.json
+├── .env
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── README.md
+├── vite.config.js
+└── LICENSE
 ```
 
 ## Key Features in Detail
